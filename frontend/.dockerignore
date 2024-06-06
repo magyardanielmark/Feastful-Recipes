@@ -1,0 +1,31 @@
+# Node Modules
+node_modules/
+
+# Build Output
+dist/
+
+# IDE and Editor Files
+.idea/
+.vscode/
+*.suo
+*.user
+*.sln
+*.sw?
+*.sublime-*
+
+# System and Environment Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Test and Coverage Reports
+/coverage
+junit*.xml
+
+# Local Development Configuration
+.env
+.env.*
+
+# Miscellaneous
+npm-debug.log*
+yarn-error.log*
