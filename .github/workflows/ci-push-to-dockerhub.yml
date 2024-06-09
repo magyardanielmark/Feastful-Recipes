@@ -1,0 +1,44 @@
+name: Push to Docker Hub
+
+on:
+    push:
+        branches:
+            - production
+
+env:
+    BACKEND_IMAGE_NAME: ${{secrets.BACKEND_PROJECT_ID}}
+    FRONTEND_IMAGE_NAME: ${{secrets.FRONTEND_PROJECT_ID}}
+
+jobs:
+    push-to-docker-hub:
+        runs-on: ubuntu-latest
+        environment: dev
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Get latest tag
+              id: get_tag
+              uses: tj-actions/branch-names@v8
+
+            
+            - name: Build backend image
+              run: docker build -t ${{ env.BACKEND_IMAGE_NAME }}:${{ steps.branch-names.outputs.tag }} -f backend/Dockerfile .
+
+            
+            - name: Build frontend image
+              run: docker build -t ${{ env.FRONTEND_IMAGE_NAME }}:${{ steps.branch-names.outputs.tag }} -f frontend/Dockerfile .
+
+            
+            - name: Log in to Docker Hub
+              uses: docker/login-action@v2
+              with:
+                  username: ${{ secrets.HOST_ID }}
+                  password: ${{ secrets.HOST_PWD }}
+
+            
+            - name: Push backend image
+              run: docker push ${{ env.BACKEND_IMAGE_NAME }}:${{ steps.branch-names.outputs.tag }}
+
+            
+            - name: Push frontend image
+              run: docker push ${{ env.FRONTEND_IMAGE_NAME }}:${{ steps.branch-names.outputs.tag }}
